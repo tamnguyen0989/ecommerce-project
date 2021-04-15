@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CustomButton from '../custom-button/custom-button.component';
 import FormInput from '../form-input/form-input.component';
-import auth from '../../firebase/firebase.utils'
+import { auth, createUserProfileDocument } from '../../firebase/firebase.utils'
 
 
 class Signup extends Component {
@@ -23,7 +23,7 @@ class Signup extends Component {
         })
     }
 
-    handleSubmit = event => {
+    handleSubmit = async event => {
         event.preventDefault()
         const { displayName, email, password, confirmPassword } = this.state
         if (password !== confirmPassword) {
@@ -32,7 +32,14 @@ class Signup extends Component {
         }
         try {
             const { user } = await auth.createUserWithEmailAndPassword(email, password)
-            await 
+            await createUserProfileDocument(user, { displayName })
+
+            this.setState({
+                displayName: '',
+                email: '',
+                password: '',
+                confirmPassword: ''
+            })
         } catch (error) {
             console.error(error);
         }
@@ -64,7 +71,7 @@ class Signup extends Component {
                     />
                     <FormInput
                         label='Password'
-                        type='text'
+                        type='password'
                         name='password'
                         value={password}
                         onChange={this.handleChange}
@@ -72,7 +79,7 @@ class Signup extends Component {
                     />
                     <FormInput
                         label='Confirm Password'
-                        type='text'
+                        type='password'
                         name='confirmPassword'
                         value={confirmPassword}
                         onChange={this.handleChange}
