@@ -1,8 +1,10 @@
+import {connect} from 'react-redux'
+import { selectedShopCollection } from '../../redux/shop/shop.selectors'
 
-import {} from './collection.styles.scss'
+import './collection.styles.scss'
 
-const CollectionPage = ({match}) => {
-    console.log(match)
+const CollectionPage = ({collection}) => {
+    console.log(collection)
     return (
         <div className='collection-page'>
             <h2>COLLECTION PAGE</h2>
@@ -10,4 +12,8 @@ const CollectionPage = ({match}) => {
     )
 }
 
-export default CollectionPage;
+const mapStateToProps = (state,ownProps) => ({
+    collection: selectedShopCollection(ownProps.match.params.collectionId)(state)
+})
+
+export default connect(mapStateToProps)(CollectionPage);
